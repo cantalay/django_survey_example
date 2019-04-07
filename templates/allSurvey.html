@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/makeSurvey.css' %}" >
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<br>
+
+<form method="POST">
+    {% csrf_token %}
+<div class="input-group">
+  <select name="survey_id" class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+    <option selected>Choose...</option>
+      {% for surveyobject in survey %}
+    <option  value="{{ surveyobject.pk }}">{{ surveyobject.title }}</option>
+{% endfor %}
+  </select>
+
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" type="submit">Show Question</button>
+  </div>
+</div>
+    </form>
+
+
+    <div class="list-group">
+  {% for questionobject in question %}
+      <a class="list-group-item list-group-item-action"> <div class="text-center"><img src="{{questionobject.question_image }}" class="rounded" alt="..."></div></a>
+  <a href="#" class="list-group-item list-group-item-action">{{ questionobject.question}} - {{ questionobject.pk }}</a>
+        {% for option in questionobject.option_set.all %}
+     <a href="#" class="list-group-item list-group-item-action">{{ option.option }}</a>
+          {% endfor %}
+    {% endfor %}
+</div>
+
+</head>
+
+<body>
+
+</body>
+</html>

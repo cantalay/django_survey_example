@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/makeSurvey.css' %}" >
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<div class="container">
+                <div class="text-center">
+                    <center>
+                        <div id="banner" class="col-lg-12">
+                        <h1  class=""><span class="hello">Enter Question ,</span><span>   </span><span class="small"> from Database</span></h1>
+                        </div>
+                    </center>
+                </div>
+            </div>
+<table class="table table-list-search table-bordered table-striped table-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Question</th>
+                            <th>Add</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for question in survey_question %}
+                        {% if not survey_object in question.survey.all %}
+                         <form method="POST">
+                         {% csrf_token %}
+                        <tr>
+                            <td>{{ question.id}}</td>
+                            <td>{{ question.question }}</td>
+                            <td>  <button name="pk" class="btn btn-info btn-sm" type="submit" value={{ question.pk }}>add</button></td>
+                        {% for option in surveyOption %}#we can not add this row because of area
+                            {%  if question.pk == option.question.pk %}
+                            <td>{{ option.option}}</td>
+                            {% endif %}
+                            {% endfor %}
+
+
+                        </tr>
+                    </form>
+
+                            {% endif %}
+
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            <div class="container">
+                <div class="text-center">
+                    <center>
+                        <div id="banner" class="col-lg-12">
+                        <h1  class=""><span class="hello">OR,</span><span class="small">Write Your Survey Question</span> <span>And Answers</span></h1>
+                        </div>
+                    </center>
+                </div>
+            </div>
+<div>
+
+        <form name="FormData" role="form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+            <div class="wrapper">
+                <br>
+            <div><input class="form-control form-control-lg" type="text" name="survey_question" placeholder="Please Write Question Here" /></div>
+                <br>
+                <div class="input-group mb-3">
+                        <div class="custom-file">
+                        <input name="question_image" type="file" class="custom-file-input"  id="id_image" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose Question Image</label>
+                        </div>
+                    </div>
+            </div>
+            <br>
+
+            <br>
+            <p><button id="add_fields" class="btn btn-secondary btn-lg btn-block">Add Answer Form</button></p>
+            <br>
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Make Sure and Send!" />
+            <br>
+        </form>
+</div>
+
+
+
+
+</head>
+<script>
+//Add Input Fields
+$(document).ready(function() {
+    var max_fields = 10; //Maximum allowed input fields
+    var wrapper    = $(".wrapper"); //Input fields wrapper
+    var add_button = $("#add_fields"); //Add button class or ID
+    var x = 0; //Initial input field is set to 1
+
+	//When user click on add input button
+	$(add_button).click(function(e){
+        e.preventDefault();
+		//Check maximum allowed input fields
+        if(x < max_fields){
+            x++; //input field increment
+			 //add input field
+            $(wrapper).append('' +
+                '<div><br>' +
+                ' <div class="row">' +
+                '   <div class="col-sm-6"> ' +
+                '       <input class="form-control" type="text" name="option'+x+'" placeholder="Write '+x+'. Option Here" >' +
+                '   </div>' +
+                '   <div class="col-sm-6">' +
+                '       <div class="input-group mb-6"> ' +
+                '           <div class="custom-file"> ' +
+                '           <input name="option_image'+x+'" type="file" class="custom-file-input"  id="id_image" aria-describedby="inputGroupFileAddon01"> ' +
+                '           <label class="custom-file-label" for="inputGroupFile01">Choose Option Image '+x+'</label>' +
+                '           </div>' +
+                '       </div> ' +
+                '    </div> ' +
+                '</div> ' +
+                '<a class="badge badge-danger" href="javascript:void(0);" >Remove</a></br>' +
+                '</div>');
+        }
+    });
+
+    //when user click on remove button
+    $(wrapper).on("click",".badge", function(e){
+        e.preventDefault();
+		$(this).parent('div').remove(); //remove inout field
+		x--; //inout field decrement
+    })
+});
+</script>
+
+
+<body>
+
+</body>
+</html>
